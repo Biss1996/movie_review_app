@@ -1,0 +1,121 @@
+from flask import Flask, request, jsonify, Blueprint
+from models import db, User, Movie
+
+movie_bp = Blueprint("movie_bp", __name__)
+
+# Helper to update average rating
+def update_average_rating(movie):
+    ratings = [r.value for r in movie.ratings]
+    movie.avg_rating = round(sum(ratings) / len(ratings), 2) if ratings else 0.0
+    db.session.commit()
+
+# Create a new movie
+@movie_bp.route('/movies', methods=['POST'])
+def create_movie():
+    data = request.get_json()
+
+    title = data.get('title')
+    description = data.get('description')
+    tags = data.get('tags')
+    user_id = data.get('user_id') 
+
+    if not title or not description or not tags:
+        return jsonify({"error": "Title, description, and tags are required"}), 400
+
+    title_exists = Movie.query.filter_by(title=title).first()
+    if title_exists:
+        return jsonify({"error": "A movie with this title already exists"}), 400
+    
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+    
+    new_movie = Movie(title=title, description=description, tags=tags, user_id=user_id, avg_rating=0.0)
+    db.session.add(new_movie)
+    db.session.commit()
+
+    return jsonify({"success": "Movie created successfully"}), 201
+
+# Fetch all movies
+@movie_bp.route('/movies', methods=['GET'])
+def get_movies():
+    movies = Movie.query.all()
+    if not movies:
+        return jsonify({"error": "No movies found"}), 404
+    
+    movies_list = []
+
+    for movie in movies:
+        ratings = [r.value for r in movie.ratings]
+        avg_rating = round(sum(ratings) / len(ratings), 2) if ratings else None
+
+        movie_data = {
+            "id": movie.id,
+            "title": movie.title,
+            "description": movie.description,
+            "average_rating": avg_rating,
+            "tags": movie.tags,
+            "created_at": movie.created_at,
+            "user": {
+                "id": movie.user.id,
+                "username": movie.user.username,
+                "email": movie.user.email
+            }
+        }
+        movies_list.append(movie_data)
+
+    return jsonify(movies_list), 200
+
+# Fetch a single movie by id
+@movie_bp.route('/movies/<int:id>', methods=['GET'])
+def get_movie(id):
+    movie = Movie.query.get(id)
+    if not movie:
+        return jsonify({"error": "Movie not found"}), 404
+
+    ratings = [r.value for r in movie.ratings]
+    avg_rating = round(sum(ratings) / len(ratings), 2) if ratings else None
+
+    return jsonify({
+        "id": movie.id,
+        "title": movie.title,
+        "description": movie.description,
+        "average_rating": avg_rating,
+        "tags": movie.tags,
+        "created_at": movie.created_at,
+        "user": {
+            "id": movie.user.id,
+            "username": movie.user.username,
+            "email": movie.user.email
+        }
+    }), 200
+
+# Update a movie
+@movie_bp.route('/movies/<int:id>', methods=['PATCH'])
+def update_movie(id):
+    movie = Movie.query.get(id)
+    if not movie:
+        return jsonify({"error": "Movie not found"}), 404
+
+    data = request.get_json()
+    title = data.get('title', movie.title)
+    description = data.get('description', movie.description)
+    tags = data.get('tags', movie.tags)
+
+    movie.title = title
+    movie.description = description
+    movie.tags = tags
+
+    db.session.commit()
+    return jsonify({"success": "Movie updated successfully"}), 200
+
+# Delete a movie
+@movie_bp.route('/movies/<int:id>', methods=['DELETE'])
+def delete_movie(id):
+    movie = Movie.query.get(id)
+    if not movie:
+        return jsonify({"message": "Movie not found"}), 404
+
+    db.session.delete(movie)
+    db.session.commit()
+    return jsonify({"success": "Movie deleted successfully"}), 200

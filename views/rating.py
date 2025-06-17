@@ -1,0 +1,71 @@
+from flask import request, jsonify, Blueprint
+from models import db, User, Movie, Rating
+
+rating_bp = Blueprint("rating_bp", __name__)
+
+# POST - Create one-time rating
+@rating_bp.route('/movie/rating', methods=['POST'])
+def create_movie_rating():
+    data = request.get_json()
+
+    user_id = data.get('user_id')
+    movie_id = data.get('movie_id')
+    value = data.get('value')
+
+    if not user_id or not movie_id or value is None:
+        return jsonify({"error": "User ID, movie ID, and value are required"}), 400
+
+    if not (1 <= value <= 5):
+        return jsonify({"error": "Rating must be between 1 and 5"}), 400
+
+    user = User.query.get(user_id)
+    movie = Movie.query.get(movie_id)
+
+    if not user or not movie:
+        return jsonify({"error": "User or Movie not found"}), 404
+
+    existing = Rating.query.filter_by(user_id=user_id, movie_id=movie_id).first()
+    if existing:
+        return jsonify({"error": "You have already rated this movie"}), 400
+
+    new_rating = Rating(user_id=user_id, movie_id=movie_id, value=value)
+    db.session.add(new_rating)
+    db.session.commit()
+    return jsonify({"success": "Rating submitted"}), 201
+
+
+# PATCH - Update existing rating
+@rating_bp.route('/movie/rating', methods=['PATCH'])
+def update_movie_rating():
+    data = request.get_json()
+
+    user_id = data.get('user_id')
+    movie_id = data.get('movie_id')
+    value = data.get('value')
+
+    if not user_id or not movie_id or value is None:
+        return jsonify({"error": "User ID, movie ID, and value are required"}), 400
+
+    if not (1 <= value <= 5):
+        return jsonify({"error": "Rating must be between 1 and 5"}), 400
+
+    rating = Rating.query.filter_by(user_id=user_id, movie_id=movie_id).first()
+    if not rating:
+        return jsonify({"error": "No rating found to update"}), 404
+
+    rating.value = value
+    db.session.commit()
+    return jsonify({"success": "Rating updated"}), 200
+
+
+# GET - Fetch average rating
+@rating_bp.route('/movie/<int:movie_id>/ratings', methods=['GET'])
+def get_ratings_for_movie(movie_id):   
+    ratings = Rating.query.filter_by(movie_id=movie_id).all()
+    if not ratings:
+        return jsonify({"average_rating": None, "count": 0}), 200
+
+    values = [r.value for r in ratings]
+    avg_rating = round(sum(values) / len(values), 2)
+    
+    return jsonify({"average_rating": avg_rating, "count": len(values)}), 200
