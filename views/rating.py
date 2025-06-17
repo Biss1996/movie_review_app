@@ -3,6 +3,11 @@ from models import db, User, Movie, Rating
 
 rating_bp = Blueprint("rating_bp", __name__)
 
+# Helper function to update average rating
+def update_average_rating(movie):
+    ratings = [r.value for r in movie.ratings]
+    movie.avg_rating = round(sum(ratings) / len(ratings), 2) if ratings else 0.0
+
 # POST - Create one-time rating
 @rating_bp.route('/movie/rating', methods=['POST'])
 def create_movie_rating():
@@ -30,9 +35,12 @@ def create_movie_rating():
 
     new_rating = Rating(user_id=user_id, movie_id=movie_id, value=value)
     db.session.add(new_rating)
+    update_average_rating(movie)
     db.session.commit()
-    return jsonify({"success": "Rating submitted"}), 201
 
+    
+
+    return jsonify({"success": "Rating submitted"}), 201
 
 # PATCH - Update existing rating
 @rating_bp.route('/movie/rating', methods=['PATCH'])
@@ -54,9 +62,12 @@ def update_movie_rating():
         return jsonify({"error": "No rating found to update"}), 404
 
     rating.value = value
+    update_average_rating(rating.movie)
     db.session.commit()
-    return jsonify({"success": "Rating updated"}), 200
 
+    
+
+    return jsonify({"success": "Rating updated"}), 200
 
 # GET - Fetch average rating
 @rating_bp.route('/movie/<int:movie_id>/ratings', methods=['GET'])

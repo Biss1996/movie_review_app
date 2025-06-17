@@ -52,7 +52,7 @@ class Rating(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    movie_id = db.Column(db.Integer, db.ForeignKey('movies.id'), nullable=True)
+    movie_id = db.Column(db.Integer, db.ForeignKey('movies.id'), nullable=False)
     value = db.Column(db.Integer, nullable=False)  # 1 to 5
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
