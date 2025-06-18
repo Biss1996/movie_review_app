@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, Blueprint
 from models import db, User
+from werkzeug.security import generate_password_hash
 
 # Importing Flask-Mail for email functionalities
 from flask_mail import Message
@@ -16,10 +17,11 @@ def create_user():
 
     username = data.get("username")
     email = data.get("email")
+    password = data.get("password")
     
 
-    if not username or not email:
-        return jsonify({"error": "Username and email are required"}), 400
+    if not username or not password or not email:
+        return jsonify({"error": "Username, email and password are required"}), 400
      
     username_exists = User.query.filter_by(username=username).first()
     email_exists = User.query.filter_by(email=email).first()
@@ -30,7 +32,7 @@ def create_user():
     if email_exists:
         return jsonify({"error": "Email already exists"}), 400
 
-    new_user = User(username=username, email=email)
+    new_user = User(username=username, email=email, password = generate_password_hash(password))
     db.session.add(new_user)
 
     # Sending a welcome email to the new user

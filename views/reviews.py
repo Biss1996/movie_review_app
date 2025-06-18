@@ -1,14 +1,17 @@
 from models import db, User, Review,Movie
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import jwt_required, get_jwt_identity
+
 
 review_bp = Blueprint("review_bp", __name__)
 
 # Create a new review
 @review_bp.route('/reviews', methods=['POST'])
+@jwt_required()
 def create_review():
     data = request.get_json()
 
-    user_id = data.get('user_id')
+    user_id = get_jwt_identity()
     movie_id = data.get('movie_id')
     message = data.get('message') 
 
@@ -23,7 +26,7 @@ def create_review():
     if not movie:
         return jsonify({"error": "Movie not found"}), 404
     
-    new_review = Review(user_id=user_id, movie_id=movie_id, message=message)  # Include message
+    new_review = Review(user_id=get_jwt_identity(), movie_id=movie_id, message=message)  # Include message
     db.session.add(new_review)
     db.session.commit()
     

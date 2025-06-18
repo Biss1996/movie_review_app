@@ -1,5 +1,7 @@
 from flask import request, jsonify, Blueprint
 from models import db, User, Movie, Rating
+from flask_jwt_extended import jwt_required, get_jwt_identity
+
 
 rating_bp = Blueprint("rating_bp", __name__)
 
@@ -10,10 +12,11 @@ def update_average_rating(movie):
 
 # POST - Create one-time rating
 @rating_bp.route('/movie/rating', methods=['POST'])
+@jwt_required()
 def create_movie_rating():
     data = request.get_json()
 
-    user_id = data.get('user_id')
+    user_id = get_jwt_identity()
     movie_id = data.get('movie_id')
     value = data.get('value')
 
@@ -29,11 +32,11 @@ def create_movie_rating():
     if not user or not movie:
         return jsonify({"error": "User or Movie not found"}), 404
 
-    existing = Rating.query.filter_by(user_id=user_id, movie_id=movie_id).first()
+    existing = Rating.query.filter_by(user_id=get_jwt_identity(), movie_id=movie_id).first()
     if existing:
         return jsonify({"error": "You have already rated this movie"}), 400
 
-    new_rating = Rating(user_id=user_id, movie_id=movie_id, value=value)
+    new_rating = Rating(user_id=get_jwt_identity(), movie_id=movie_id, value=value)
     db.session.add(new_rating)
     update_average_rating(movie)
     db.session.commit()
@@ -47,7 +50,7 @@ def create_movie_rating():
 def update_movie_rating():
     data = request.get_json()
 
-    user_id = data.get('user_id')
+    user_id = get_jwt_identity()
     movie_id = data.get('movie_id')
     value = data.get('value')
 
@@ -57,7 +60,7 @@ def update_movie_rating():
     if not (1 <= value <= 5):
         return jsonify({"error": "Rating must be between 1 and 5"}), 400
 
-    rating = Rating.query.filter_by(user_id=user_id, movie_id=movie_id).first()
+    rating = Rating.query.filter_by(user_id=get_jwt_identity(), movie_id=movie_id).first()
     if not rating:
         return jsonify({"error": "No rating found to update"}), 404
 

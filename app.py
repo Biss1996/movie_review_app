@@ -1,7 +1,11 @@
 from flask import Flask, request, jsonify
-from models import db, User
+from models import db, User, TokenBlocklist
+from datetime import timedelta
 from flask_migrate import Migrate
 from flask_mail import Mail
+from flask_jwt_extended import JWTManager
+
+
 
 app = Flask(__name__)
 
@@ -22,9 +26,22 @@ app.config['MAIL_PASSWORD'] = 'iqrh njlh lltk bspa'  # Replace with your App act
 app.config['MAIL_DEFAULT_SENDER'] = 'bismarckkip684@gmail.com'
 
 mail = Mail(app)
+
+
+# JWT
+app.config["JWT_SECRET_KEY"] = "rtyuytrkgfd"  
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=20)
+
+
+# test
+app.config["JWT_VERIFY_SUB"] = False
+
+jwt = JWTManager(app)
+jwt.init_app(app)
+
 # Register Blueprints
 from views import *
-
+app.register_blueprint(auth_bp)
 app.register_blueprint(user_bp)
 app.register_blueprint(movie_bp)
 app.register_blueprint(review_bp)
@@ -35,3 +52,13 @@ app.register_blueprint(rating_bp)
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+
+# Callback function to check if a JWT exists in the database blocklist
+@jwt.token_in_blocklist_loader
+def check_if_token_revoked(jwt_header, jwt_payload: dict) -> bool:
+    jti = jwt_payload["jti"]
+    token = db.session.query(TokenBlocklist.id).filter_by(jti=jti).scalar()
+
+    return token is not None
+

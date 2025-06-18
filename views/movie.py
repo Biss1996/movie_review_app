@@ -1,5 +1,7 @@
 from flask import Flask, request, jsonify, Blueprint
 from models import db, User, Movie
+from flask_jwt_extended import jwt_required, get_jwt_identity
+
 
 movie_bp = Blueprint("movie_bp", __name__)
 
@@ -11,13 +13,14 @@ def update_average_rating(movie):
 
 # Create a new movie
 @movie_bp.route('/movies', methods=['POST'])
+@jwt_required()
 def create_movie():
     data = request.get_json()
 
     title = data.get('title')
     description = data.get('description')
     tags = data.get('tags')
-    user_id = data.get('user_id') 
+    user_id = get_jwt_identity() 
 
     if not title or not description or not tags:
         return jsonify({"error": "Title, description, and tags are required"}), 400
@@ -30,7 +33,7 @@ def create_movie():
     if not user:
         return jsonify({"error": "User not found"}), 404
     
-    new_movie = Movie(title=title, description=description, tags=tags, user_id=user_id, avg_rating=0.0)
+    new_movie = Movie(title=title, description=description, tags=tags, user_id=get_jwt_identity(), avg_rating=0.0)
     db.session.add(new_movie)
     db.session.commit()
 

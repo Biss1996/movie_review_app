@@ -11,6 +11,8 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(30), nullable=False, unique=True)
     email = db.Column(db.String(30), nullable=False, unique=True)
+    password = db.Column(db.String(260), nullable=False, unique=False)
+
     is_admin = db.Column(db.Boolean, default=False)
     is_blocked = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -20,6 +22,11 @@ class User(db.Model):
     reviews = db.relationship('Review', backref='user', lazy=True)
     ratings = db.relationship('Rating', backref='user', lazy=True)
 
+# TokenBlocklist
+class TokenBlocklist(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    jti = db.Column(db.String(36), nullable=False, index=True)
+    created_at = db.Column(db.DateTime, nullable=False)
 
 class Movie(db.Model):
     __tablename__ = 'movies'
