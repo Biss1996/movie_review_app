@@ -72,7 +72,7 @@ def update_review(id):
     return jsonify({"success": "Review updated successfully"}), 200
 
 
-# Delete an review
+# Delete a review
 @review_bp.route('/reviews/<int:id>', methods=['DELETE'])
 def delete_review(id):
     review = Review.query.get(id)

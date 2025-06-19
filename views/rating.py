@@ -47,6 +47,7 @@ def create_movie_rating():
 
 # PATCH - Update existing rating
 @rating_bp.route('/movie/rating', methods=['PATCH'])
+@jwt_required()
 def update_movie_rating():
     data = request.get_json()
 
@@ -83,3 +84,5 @@ def get_ratings_for_movie(movie_id):
     avg_rating = round(sum(values) / len(values), 2)
     
     return jsonify({"average_rating": avg_rating, "count": len(values)}), 200
+
+

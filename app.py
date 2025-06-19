@@ -4,6 +4,8 @@ from datetime import timedelta
 from flask_migrate import Migrate
 from flask_mail import Mail
 from flask_jwt_extended import JWTManager
+from sqlalchemy import event
+from sqlalchemy.engine import Engine
 
 
 
@@ -27,7 +29,12 @@ app.config['MAIL_DEFAULT_SENDER'] = 'bismarckkip684@gmail.com'
 
 mail = Mail(app)
 
-
+# delete reviews, ratins,movies when user is deleted
+@event.listens_for(Engine, "connect")
+def enforce_foreign_keys(dbapi_connection, connection_record):
+    cursor = dbapi_connection.cursor()
+    cursor.execute("PRAGMA foreign_keys=ON")
+    cursor.close()
 # JWT
 app.config["JWT_SECRET_KEY"] = "rtyuytrkgfd"  
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=20)

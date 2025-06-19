@@ -86,7 +86,7 @@ def update_user(user_id):
 
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": "Failed to regsiter/send welcome email"}), 400
+        return jsonify({"error": "Failed to update user/send update email"}), 400
    
 
 

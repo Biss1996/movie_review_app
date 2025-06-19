@@ -18,9 +18,9 @@ class User(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     # relationships
-    movies = db.relationship('Movie', backref='user', lazy=True)
-    reviews = db.relationship('Review', backref='user', lazy=True)
-    ratings = db.relationship('Rating', backref='user', lazy=True)
+    movies = db.relationship('Movie', backref='user', lazy=True, cascade='all, delete-orphan', passive_deletes=True)
+    reviews = db.relationship('Review', backref='user', lazy=True, cascade='all, delete-orphan', passive_deletes=True)
+    ratings = db.relationship('Rating', backref='user', lazy=True, cascade='all, delete-orphan', passive_deletes=True)
 
 # TokenBlocklist
 class TokenBlocklist(db.Model):
@@ -36,17 +36,17 @@ class Movie(db.Model):
     avg_rating = db.Column(db.Float, default=0.0)
 
     tags = db.Column(db.String(80), nullable=False) # horror, action, documentary
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', name='fk_movies_user_id', ondelete='CASCADE'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    reviews = db.relationship('Review', backref='movie', lazy=True)
-    ratings = db.relationship('Rating', backref='movie', lazy=True)
+    reviews = db.relationship('Review', backref='movie',cascade='all, delete-orphan', passive_deletes=True, lazy=True)
+    ratings = db.relationship('Rating', backref='movie', cascade='all, delete-orphan', passive_deletes=True, lazy=True)
 
 
 class Review(db.Model):
     __tablename__ = 'reviews'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', name='fk_reviews_user_id', ondelete='CASCADE'), nullable=False)
     movie_id = db.Column(db.Integer, db.ForeignKey('movies.id'), nullable=False)
     message = db.Column(db.String(200), nullable=False, unique=True)
     is_hidden = db.Column(db.Boolean, default=False)
@@ -58,7 +58,7 @@ class Rating(db.Model):
     __tablename__ = 'ratings'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', name='fk_ratings_user_id', ondelete='CASCADE'), nullable=False)
     movie_id = db.Column(db.Integer, db.ForeignKey('movies.id'), nullable=False)
     value = db.Column(db.Integer, nullable=False)  # 1 to 5
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
