@@ -49,7 +49,6 @@ class Review(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', name='fk_reviews_user_id', ondelete='CASCADE'), nullable=False)
     movie_id = db.Column(db.Integer, db.ForeignKey('movies.id'), nullable=False)
     message = db.Column(db.String(200), nullable=False, unique=True)
-    is_hidden = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     is_approved = db.Column(db.Boolean, default=False)
 

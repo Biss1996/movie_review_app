@@ -45,7 +45,6 @@ def get_reviews_for_movie(movie_id):
         "id": review.id,
         "message": review.message,
         "created_at": review.created_at,
-        "is_hidden": review.is_hidden,
         "movie_id": review.movie_id,
         "user": {
             "id": review.user.id,
@@ -72,14 +71,46 @@ def update_review(id):
     return jsonify({"success": "Review updated successfully"}), 200
 
 
+# ROUTE FOR APPROVING A REVIEW BY ADMIN
+@review_bp.route('/reviews/<int:id>/approve', methods=['PATCH'])
+@jwt_required()
+def approve_dissapprove_review(id):
+    current_user_id = get_jwt_identity()
+    current_user = User.query.get(current_user_id)
+    
+    if not current_user.is_admin:
+        return jsonify({"error": "You are not authorized to approve or disapprove reviews"}), 403
+
+    review = Review.query.get(id)
+    if not review:
+        return jsonify({"error": "Review not found"}), 404
+
+    data = request.get_json()
+    is_approved = data.get('is_approved', review.is_approved)
+
+    if is_approved:
+        review.is_approved = True
+        db.session.commit()
+        return jsonify({"success": "Review approved!"}), 200
+    else:
+        review.is_approved = False
+        db.session.commit()
+        return jsonify({"success": "Review dissapproved!"}), 200
+
+
+
 # Delete a review
 @review_bp.route('/reviews/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_review(id):
+    current_user_id= get_jwt_identity()
     review = Review.query.get(id)
     
     if not review:
         return jsonify({"message": "Review not found"}), 404
-
+    if review.user.id != current_user_id:
+        return jsonify({"error": "Not authorized"}), 401
+    
     db.session.delete(review)
     db.session.commit()
 

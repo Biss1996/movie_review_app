@@ -1,8 +1,8 @@
-"""Initial with proper cascading deletes
+"""Initial migration with proper CASCADE
 
-Revision ID: 007a173c8603
+Revision ID: 21f13cda43d3
 Revises: 
-Create Date: 2025-06-19 13:55:24.136352
+Create Date: 2025-06-21 14:58:04.831780
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '007a173c8603'
+revision = '21f13cda43d3'
 down_revision = None
 branch_labels = None
 depends_on = None

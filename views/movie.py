@@ -63,7 +63,10 @@ def get_movies():
                 "id": movie.user.id,
                 "username": movie.user.username,
                 "email": movie.user.email
-            }
+            },
+             # fetch movie ratings
+            "ratings": avg_rating
+       
         }
         movies_list.append(movie_data)
 
@@ -95,11 +98,15 @@ def get_movie(id):
 
 # Update a movie
 @movie_bp.route('/movies/<int:id>', methods=['PATCH'])
+@jwt_required()
 def update_movie(id):
+    current_user_id = get_jwt_identity()
     movie = Movie.query.get(id)
     if not movie:
         return jsonify({"error": "Movie not found"}), 404
-
+    if movie.user.id != current_user_id:
+        return jsonify({"error": "You are not authorized to update this movie"}), 403
+    
     data = request.get_json()
     title = data.get('title', movie.title)
     description = data.get('description', movie.description)
@@ -114,10 +121,14 @@ def update_movie(id):
 
 # Delete a movie
 @movie_bp.route('/movies/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_movie(id):
+    current_user_id =get_jwt_identity()
     movie = Movie.query.get(id)
     if not movie:
         return jsonify({"message": "Movie not found"}), 404
+    if movie.user.id != current_user_id:
+        return jsonify({"error": "You are not authorized to delete this movie"}), 403
 
     db.session.delete(movie)
     db.session.commit()
