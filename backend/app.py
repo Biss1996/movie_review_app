@@ -6,6 +6,8 @@ from flask_mail import Mail
 from flask_jwt_extended import JWTManager
 from sqlalchemy import event
 from sqlalchemy.engine import Engine
+from flask_cors import CORS
+
 
 
 
@@ -16,6 +18,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 migrate = Migrate(app, db)
 db.init_app(app)
+# flask cors
+CORS(app)
 
 # mail configurations
 
@@ -37,7 +41,7 @@ def enforce_foreign_keys(dbapi_connection, connection_record):
     cursor.close()
 # JWT
 app.config["JWT_SECRET_KEY"] = "rtyuytrkgfd"  
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=20)
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=24)
 
 
 # test

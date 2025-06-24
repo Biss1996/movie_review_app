@@ -1,4 +1,4 @@
-from models import db, User, Review,Movie
+from models import db, User, TokenBlocklist, Review, Movie
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
@@ -79,7 +79,7 @@ def approve_dissapprove_review(id):
     current_user = User.query.get(current_user_id)
     
     if not current_user.is_admin:
-        return jsonify({"error": "You are not authorized to approve or disapprove reviews"}), 403
+        return jsonify({"error": "You are not authorized to approve/disapprove reviews"}), 403
 
     review = Review.query.get(id)
     if not review:
