@@ -61,7 +61,7 @@ const Movies = () => {
         <svg
           key={i}
           xmlns="http://www.w3.org/2000/svg"
-          fill={i < Math.round(movie.avg_rating) ? "#facc15" : "none"}
+          fill={i < Math.round(movie.average_rating) ? "#facc15" : "none"}
           viewBox="0 0 24 24"
           stroke="#facc15"
           className="w-5 h-5"
@@ -75,44 +75,7 @@ const Movies = () => {
           </li>
 
         ))}
-
-        
-
-        
-
-        {/* A normal user can only view approved movies */}
-        { currentUser && !currentUser.is_admin &&  movies && movies.map((movie) => (
-          movie.is_approved &&
-          <li key={movie.id} className="flex items-center mb-4 p-4 bg-gray-100 rounded-lg shadow-md">
-            {/* ratings col */}
-            <div className="flex flex-col items-center justify-center mr-4 min-w-20">
-              <button
-                onClick={() => handleRating(movie.id, 1)}
-                className="hover:text-gray-700 py-1 px-2 rounded-full mt-2 "
-              >
-                <IoMdArrowDropupCircle size={40} />
-              </button>
-              <span className="text-lg font-bold">{movie.ratings}</span>
-              <button
-                onClick={() => handleRating(movie.id, -1)}
-                className="hover:text-gray-700 py-1 px-2 rounded-full mt-2 "
-              >
-               <IoMdArrowDropdownCircle size={40} />
-              </button>
-            </div>
-
-            {/* Movie Title and Description */}
-            <div>
-              <Link to={`/movies/${movie.id}`} className="text-blue-600 hover:underline">
-                <h3 className="text-xl font-semibold">{movie.title}</h3>
-              </Link>
-              <p className="text-gray-600">{movie.description}</p>
-            </div>
-          </li>
-
-        ))}
-
-      
+  
 
 
       </ul>

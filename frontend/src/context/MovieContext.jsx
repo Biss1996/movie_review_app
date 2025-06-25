@@ -45,6 +45,28 @@ export const MovieProvider = ({ children }) =>
         })
     }
 
+// Update a Review by user
+
+const update_review = async (review_id, message) => {
+  await fetch(`${api_url}/reviews/${review_id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${auth_token}`,
+    },
+    body: JSON.stringify({ message }),
+  });
+};
+
+// delete review by user
+const delete_review = async (review_id) => {
+  await fetch(`${api_url}/reviews/${review_id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${auth_token}`,
+    },
+  });
+};
 
     // Approve movie by admin
    function approve_movie(id, is_approved){
@@ -99,7 +121,7 @@ export const MovieProvider = ({ children }) =>
       "Content-Type": "application/json",
       Authorization: `Bearer ${auth_token}`,
     },
-    body: JSON.stringify({ movie_id, value }), // `value` is your rating: 1–5
+    body: JSON.stringify({ movie_id, value }), // `value`  rating: 1–5
   })
     .then((response) => response.json())
     .then((res) => {
@@ -164,7 +186,9 @@ export const MovieProvider = ({ children }) =>
       add_movie,
         handleRating,
         add_review,
-        // approve_review
+        // approve_review,
+        update_review,
+        delete_review
     }
 
     return(

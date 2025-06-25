@@ -100,6 +100,8 @@ def get_movie(id):
                 "id": review.id,
                 "message": review.message,
                 "created_at": review.created_at,
+                "is_approved": review.is_approved,
+
                 "user": {
                     "id": review.user.id,
                     "username": review.user.username

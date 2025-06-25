@@ -35,9 +35,18 @@ def create_review():
 
 # Fetch all reviews for a movie
 @review_bp.route('/movie/<int:movie_id>/reviews', methods=['GET'])
+@jwt_required(optional=True)
 def get_reviews_for_movie(movie_id):
-    reviews = Review.query.filter_by(movie_id=movie_id).all()
-    
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id) if current_user_id else None
+
+    if user and user.is_admin:
+        # Admin can see all reviews
+        reviews = Review.query.filter_by(movie_id=movie_id).all()
+    else:
+        # Normal users only see approved reviews
+        reviews = Review.query.filter_by(movie_id=movie_id, is_approved=True).all()
+
     if not reviews:
         return jsonify({"message": "No reviews found for this movie"}), 404
 
@@ -46,6 +55,8 @@ def get_reviews_for_movie(movie_id):
         "message": review.message,
         "created_at": review.created_at,
         "movie_id": review.movie_id,
+        "is_approved": review.is_approved,
+
         "user": {
             "id": review.user.id,
             "username": review.user.username,
@@ -97,6 +108,30 @@ def approve_dissapprove_review(id):
         db.session.commit()
         return jsonify({"success": "Review dissapproved!"}), 200
 
+# Admin approve reviewsfrom flask import request, jsonify
+from flask_jwt_extended import jwt_required, get_jwt_identity
+from models import Review, db, User
+
+@review_bp.route("/reviews/<int:review_id>/approve", methods=["PATCH"])
+@jwt_required()
+def approve_review(review_id):
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+
+    if not user or not user.is_admin:
+        return jsonify({"error": "Unauthorized"}), 403
+
+    review = Review.query.get(review_id)
+    if not review:
+        return jsonify({"error": "Review not found"}), 404
+
+    data = request.get_json()
+    is_approved = data.get("is_approved", True)
+
+    review.is_approved = is_approved
+    db.session.commit()
+
+    return jsonify({"success": "Review approval updated"}), 200
 
 
 # Delete a review
