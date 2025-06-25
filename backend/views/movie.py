@@ -93,7 +93,20 @@ def get_movie(id):
             "id": movie.user.id,
             "username": movie.user.username,
             "email": movie.user.email
-        }
+        },
+    
+        "reviews": [
+            {
+                "id": review.id,
+                "message": review.message,
+                "created_at": review.created_at,
+                "user": {
+                    "id": review.user.id,
+                    "username": review.user.username
+                }
+            }
+            for review in movie.reviews
+        ]
     }), 200
 
 # Update a movie

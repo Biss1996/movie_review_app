@@ -125,7 +125,7 @@ export const MovieProvider = ({ children }) =>
     // =========================reviews==================================
                 
     // =====  to add a new review ======
-    function add_review(movie_id, description){
+    function add_review(movie_id, message){
         toast.loading("Adding your review...");
         fetch(`${api_url}/reviews`, {
                 method: "POST",
@@ -133,7 +133,7 @@ export const MovieProvider = ({ children }) =>
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${auth_token}`
                 },
-                body: JSON.stringify({movie_id, description})
+                body: JSON.stringify({movie_id, message})
             }
         )
         .then(response => response.json())

@@ -50,7 +50,7 @@ const SingleMovie = () => {
           <ul>
             {movie && movie.reviews && movie.reviews.map((review) => (
               <li key={review.id} className="bg-gray-100 p-4 my-2 rounded">
-                 <p className='py-4'>{review.body}</p>
+                 <p className='py-4'>{review.message}</p>
                 <hr/>
                 <div className='flex justify-between'>
                   <p>{review.user.username}</p> <p>{review.created_at}</p>
