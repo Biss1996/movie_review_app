@@ -9,15 +9,17 @@ const AddMovie = () => {
   const [tags, setTags] = useState('');
 
     const { add_movie } = useContext(MovieContext);
-  // if the user is not logged in, show a message
-    const {currentUser} = useContext(UserContext);
-    if (!currentUser || currentUser.is_admin ) {
-      return <div className="text-center mt-20">Please log in to add a movie/unauthorized.</div>;
-    }
+// admins add new movie
+const { currentUser } = useContext(UserContext);
+
+if (!currentUser || !currentUser.is_admin) {
+  return <div className="text-center mt-20">Please login to add a movie / Unauthorized.</div>;
+}
 
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
      
     if(body.length < 20){
       toast.error("Movie body must be at least 20 characters long.");

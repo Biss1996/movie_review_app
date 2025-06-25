@@ -68,37 +68,7 @@ const delete_review = async (review_id) => {
   });
 };
 
-    // Approve movie by admin
-   function approve_movie(id, is_approved){
-        toast.loading("Approve the movie...");
-        fetch(`${api_url}/movies/${id}/approve`, {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${auth_token}`
-                },
-                body: JSON.stringify({is_approved})
-            }
-        )
-        .then(response => response.json())
-        .then(res => {
-            if(res.error){
-                toast.dismiss();
-                toast.error(res.error);
-            }
-            else if(res.success){
-                toast.dismiss();
-                setOnchange(!onChange)
-                toast.success(res.success);
-            }
-            else{
-                toast.dismiss();
-                toast.error("An error occurred while approving the movie.");
-            }
-        })
-    }
 
-    
 
 
     // fetch all movies from the API

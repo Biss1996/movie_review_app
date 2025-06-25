@@ -19,14 +19,14 @@ const Navbar = () => {
             <NavLink to="/movies" className="hover:text-blue-300">Movies</NavLink>
           </li>
 
-          {currentUser && currentUser.role === "admin" && (
+          {currentUser?.is_admin && (
             <>
-              <li>
-                <NavLink to="/addmovie" className="hover:text-blue-300">New Movie</NavLink>
-              </li>
-              <li>
-                <NavLink to="/users" className="hover:text-blue-300">Users</NavLink>
-              </li>
+              {/* <li><NavLink to="/admin" className="hover:text-blue-300">Dashboard</NavLink></li> */}
+              <li><NavLink to="/admin/movies" className="hover:text-blue-300">Manage Movies</NavLink></li>
+              <li><NavLink to="/admin/reviews" className="hover:text-blue-300">Manage Reviews</NavLink></li>
+              <li><NavLink to="/admin/users" className="hover:text-blue-300">Manage Users</NavLink></li>
+              <li><NavLink to="/admin/addmovie" className="hover:text-blue-300">Add Movie</NavLink></li>
+
             </>
           )}
 

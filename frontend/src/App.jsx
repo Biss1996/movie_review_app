@@ -1,5 +1,5 @@
-import React from 'react';
-import {  Route, Routes, BrowserRouter } from 'react-router-dom';
+import React, { useContext } from 'react';
+import {  Route, Routes, BrowserRouter, Navigate } from 'react-router-dom';
 import Home from './pages/Home';
 import Movies from './pages/Movies';
 import SingleMovie from './pages/SingleMovie';
@@ -9,17 +9,21 @@ import Register from './pages/Register';
 import Layout from './components/Layout';
 import Users from './pages/Users';
 import AddMovie from './pages/AddMovie';
-import { UserProvider } from './context/UserContext';
+import { UserProvider, UserContext } from './context/UserContext';
 import { MovieProvider } from './context/MovieContext';
 
+const AdminRoute = ({ children }) => {
+  const { currentUser } = useContext(UserContext);
+  if (!currentUser?.is_admin) return <Navigate to="/" />;
+  return children;
+};
 function App() {
+
   return (
     <BrowserRouter>
 
     <UserProvider>
       <MovieProvider>
-        {/* <AnswerProvider> */}
-        {/* <VoteProvider> */}
 
         <Routes>
           <Route path='/' element={<Layout />} >
@@ -27,15 +31,16 @@ function App() {
             <Route path="/movies" element={<Movies />} />
             <Route path="/movies/:mov_id" element={<SingleMovie />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/users" element={<Users />} />
-            <Route path="/addmovie" element={<AddMovie />} />
+            <Route path="/admin/users" element={<AdminRoute><Users /></AdminRoute>} />
+            <Route path="/admin/users" element={<AdminRoute><Users /></AdminRoute>} />
+<Route path="/admin/addmovie" element={<AdminRoute><AddMovie /></AdminRoute>} />
+         
 
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
           </Route>
         </Routes>
-        {/* </VoteProvider> */}
-        {/* </AnswerProvider> */}
+      
       </MovieProvider>
     </UserProvider>
 
