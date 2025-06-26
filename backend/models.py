@@ -46,8 +46,9 @@ class Movie(db.Model):
 class Review(db.Model):
     __tablename__ = 'reviews'
     id = db.Column(db.Integer, primary_key=True)
+    
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', name='fk_reviews_user_id', ondelete='CASCADE'), nullable=False)
-    movie_id = db.Column(db.Integer, db.ForeignKey('movies.id'), nullable=False)
+    movie_id = db.Column(db.Integer, db.ForeignKey('movies.id', name='fk_reviews_movie_id', ondelete='CASCADE'), nullable=False)
     message = db.Column(db.String(200), nullable=False, unique=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     is_approved = db.Column(db.Boolean, default=False)
@@ -58,7 +59,7 @@ class Rating(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', name='fk_ratings_user_id', ondelete='CASCADE'), nullable=False)
-    movie_id = db.Column(db.Integer, db.ForeignKey('movies.id'), nullable=False)
+    movie_id = db.Column(db.Integer, db.ForeignKey('movies.id', name='fk_ratings_movie_id', ondelete='CASCADE'), nullable=False)
     value = db.Column(db.Integer, nullable=False)  # 1 to 5
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 

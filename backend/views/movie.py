@@ -111,21 +111,28 @@ def get_movie(id):
         ]
     }), 200
 
-# Update a movie
 @movie_bp.route('/movies/<int:id>', methods=['PATCH'])
 @jwt_required()
 def update_movie(id):
     current_user_id = get_jwt_identity()
+    current_user = User.query.get(current_user_id)
+
     movie = Movie.query.get(id)
     if not movie:
         return jsonify({"error": "Movie not found"}), 404
-    if movie.user.id != current_user_id:
+
+    # Allow owner or admin to edit
+    if movie.user.id != current_user_id and not current_user.is_admin:
         return jsonify({"error": "You are not authorized to update this movie"}), 403
-    
+
     data = request.get_json()
     title = data.get('title', movie.title)
     description = data.get('description', movie.description)
     tags = data.get('tags', movie.tags)
+
+    # Ensure title and description are not empty
+    if not title or not description:
+        return jsonify({"error": "Title and description are required"}), 422
 
     movie.title = title
     movie.description = description
@@ -134,15 +141,18 @@ def update_movie(id):
     db.session.commit()
     return jsonify({"success": "Movie updated successfully"}), 200
 
-# Delete a movie
 @movie_bp.route('/movies/<int:id>', methods=['DELETE'])
 @jwt_required()
 def delete_movie(id):
-    current_user_id =get_jwt_identity()
+    current_user_id = get_jwt_identity()
+    current_user = User.query.get(current_user_id)
+
     movie = Movie.query.get(id)
     if not movie:
         return jsonify({"message": "Movie not found"}), 404
-    if movie.user.id != current_user_id:
+
+    # Allow movie owner or admin to delete
+    if movie.user.id != current_user_id and not current_user.is_admin:
         return jsonify({"error": "You are not authorized to delete this movie"}), 403
 
     db.session.delete(movie)

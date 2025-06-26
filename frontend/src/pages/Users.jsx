@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 const sampleUsers = [
-  { id: 1, username: 'Kelvin ipchumba', email: 'kelvin.ipchumba@example.com', isAdmin: true, isBlocked: false },
+  { id: 1, username: 'Bismark Bett', email: 'bismark@gmail.com', isAdmin: true, isBlocked: false },
   { id: 2, username: 'Mercy Mike', email: 'mercy.mike@example.com', isAdmin: false, isBlocked: false },
   { id: 3, username: 'admin_user', email: 'admin@example.com', isAdmin: true, isBlocked: true },
   { id: 4, username: 'test_user', email: 'test.user@example.com', isAdmin: false, isBlocked: false },
@@ -20,18 +20,8 @@ const Users = () => {
   };
 
   return (
-    <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+<div className="relative bg-gradient-to-b from-blue-200 to-blue-200/30 dark:from-blue-900 dark:to-blue-900/30 w-full min-h-screen pt-0 pb-0">
      
-      {/* Search Bar */}
-      <div className="my-8">
-        <input
-          type="text"
-          value={search}
-          onChange={handleSearch}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-          placeholder="Search by username or email"
-        />
-      </div>
 
       <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

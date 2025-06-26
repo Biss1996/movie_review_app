@@ -36,7 +36,7 @@ const Navbar = () => {
                 <Link to="/profile" className="hover:text-blue-300">Profile</Link>
               </li>
               <li>
-                <button className="bg-slate-600 px-3 py-1 rounded-full">
+                <button className="bg-white px-3 py-1 hover:text-blue-500 text-blue-900 text-bold-200 rounded-full">
                   {currentUser.username}
                 </button>
               </li>

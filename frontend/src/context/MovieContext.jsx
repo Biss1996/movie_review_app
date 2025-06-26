@@ -68,21 +68,77 @@ const delete_review = async (review_id) => {
   });
 };
 
+// delete movie by admin
+const deleteMovie = (id) => {
+  fetch(`${api_url}/movies/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${auth_token}`,
+    },
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.success) {
+        toast.success(data.success);
+        setOnchange(!onChange); // trigger re-fetch
+      } else {
+        toast.error(data.error || "Delete failed");
+      }
+    })
+    .catch(() => toast.error("Server error deleting movie"));
+};
 
 
 
     // fetch all movies from the API
-    useEffect(() => {
-        fetch(`${api_url}/movies`)
-        .then(response => response.json())
-        .then(data=>{
-            setMovies(data);
-            
-            console.log("Fetched movies: ", data);
-            
-        })
-    }, [onChange]);
 
+useEffect(() => {
+  fetch(`${api_url}/movies`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Failed to fetch movies");
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (Array.isArray(data)) {
+        setMovies(data);
+      } else {
+        setMovies([]);
+        console.error("Invalid data:", data);
+        toast.error("Failed to load movies.");
+      }
+    })
+    .catch(err => {
+      setMovies([]);
+      console.error("Error fetching movies:", err);
+      toast.error("Unable to fetch movies from server.");
+    });
+}, [onChange]);
+
+// edit movie by admin
+
+const editMovie = (id, updatedData) => {
+  return fetch(`${api_url}/movies/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${auth_token}`,
+    },
+    body: JSON.stringify(updatedData),
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        toast.success("Movie updated successfully!");
+        setOnchange(!onChange); // refresh list
+      } else {
+        toast.error(data.error || "Failed to update movie.");
+      }
+      return data;
+    })
+    .catch(() => toast.error("Server error while updating movie"));
+};
 
     const handleRating = (movie_id, value) => {
   fetch(`${api_url}/movie/rating`, {
@@ -114,7 +170,6 @@ const delete_review = async (review_id) => {
 };
 
 
-    // =========================reviews==================================
                 
     // =====  to add a new review ======
     function add_review(movie_id, message){
@@ -151,15 +206,19 @@ const delete_review = async (review_id) => {
 
 
 
-    const context_data={
-      movies,
-      add_movie,
-        handleRating,
-        add_review,
-        // approve_review,
-        update_review,
-        delete_review
-    }
+    const context_data = {
+  movies,
+  onChange,
+  setOnchange,
+  add_movie,
+  deleteMovie,
+  handleRating,
+  add_review,
+  update_review,
+  delete_review,
+  editMovie
+};
+
 
     return(
         <MovieContext.Provider value={context_data}>

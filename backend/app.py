@@ -7,7 +7,7 @@ from flask_jwt_extended import JWTManager
 from sqlalchemy import event
 from sqlalchemy.engine import Engine
 from flask_cors import CORS
-
+import sqlite3 
 
 
 
@@ -36,6 +36,7 @@ mail = Mail(app)
 # delete reviews, ratins,movies when user is deleted
 @event.listens_for(Engine, "connect")
 def enforce_foreign_keys(dbapi_connection, connection_record):
+  if isinstance(dbapi_connection, sqlite3.Connection):
     cursor = dbapi_connection.cursor()
     cursor.execute("PRAGMA foreign_keys=ON")
     cursor.close()

@@ -9,6 +9,8 @@ import Register from './pages/Register';
 import Layout from './components/Layout';
 import Users from './pages/Users';
 import AddMovie from './pages/AddMovie';
+import AdminMovies from './pages/AdminMovies';
+import AdminReviews from './pages/AdminReviews';
 import { UserProvider, UserContext } from './context/UserContext';
 import { MovieProvider } from './context/MovieContext';
 
@@ -33,8 +35,10 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/admin/users" element={<AdminRoute><Users /></AdminRoute>} />
             <Route path="/admin/users" element={<AdminRoute><Users /></AdminRoute>} />
-<Route path="/admin/addmovie" element={<AdminRoute><AddMovie /></AdminRoute>} />
-         
+            <Route path="/admin/addmovie" element={<AdminRoute><AddMovie /></AdminRoute>} />
+            <Route path="/admin/movies" element={<AdminRoute><AdminMovies /></AdminRoute>} />
+            <Route path="/admin/reviews" element={<AdminRoute><AdminReviews /></AdminRoute>} />
+
 
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
