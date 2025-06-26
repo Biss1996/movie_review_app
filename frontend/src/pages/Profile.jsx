@@ -1,15 +1,44 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../context/UserContext';
 import { toast } from 'react-toastify';
+import { MovieContext } from '../context/MovieContext';
 
 const Profile = () => {
     const {currentUser, update_user_profile, delete_profile} = useContext(UserContext);
 
-  const [username, setUsername] = useState();
-  const [email, setEmail] = useState();
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const { movies } = useContext(MovieContext); 
+  // user movies reviews and ratings
+  const userReviews = [];
+  const userRatings = [];
+
+  movies?.forEach((movie) => {
+    if (movie.reviews) {
+      movie.reviews.forEach((rev) => {
+        if (rev.user?.username === currentUser?.username) {
+          userReviews.push({
+            title: movie.title,
+            message: rev.message,
+            created_at: rev.created_at,
+          });
+        }
+      });
+    }
+
+    if (Array.isArray(movie.ratings)) {
+  movie.ratings.forEach((rat) => {
+    if (rat.user?.username === currentUser?.username) {
+      userRatings.push({ title: movie.title, value: rat.value });
+    }
+  });
+}
+
+});
+
 
   // set initial values for username and email from currentUser
   useEffect(() => {
@@ -143,6 +172,37 @@ const Profile = () => {
           >
             DELETE YOUR ACCOUNT
         </button>
+         {/* Your Reviews */}
+        {userReviews.length > 0 && (
+          <div className="mt-10">
+            <h3 className="text-xl font-semibold mb-3 text-gray-800 dark:text-white">Your Reviews</h3>
+            <ul className="space-y-4">
+              {userReviews.map((rev, i) => (
+                <li key={i} className="bg-gray-100 dark:bg-gray-700 p-4 rounded">
+                  <p className="font-bold text-gray-900 dark:text-white">{rev.title}</p>
+                  <p className="mt-1 text-gray-800 dark:text-gray-200">{rev.message}</p>
+                  <p className="text-sm text-gray-500 mt-2">On: {rev.created_at}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Your Ratings */}
+        {userRatings.length > 0 && (
+          <div className="mt-10">
+            <h3 className="text-xl font-semibold mb-3 text-gray-800 dark:text-white">Your Ratings</h3>
+            <ul className="space-y-4">
+              {userRatings.map((rate, i) => (
+                <li key={i} className="bg-gray-100 dark:bg-gray-700 p-4 rounded">
+                  <p className="font-bold text-gray-900 dark:text-white">{rate.title}</p>
+                  <p className="text-gray-800 dark:text-gray-200">Rating: {rate.value}/5</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
 
 
       </div>
