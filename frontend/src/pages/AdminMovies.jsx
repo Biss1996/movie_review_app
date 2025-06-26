@@ -43,8 +43,10 @@ const AdminMovies = () => {
 
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-6 text-center">Manage Movies</h2>
+  <div className="relative pt-4 pb-3 bg-gradient-to-b from-blue-200 to-blue-200/30 dark:from-blue-900 dark:to-blue-900/30 w-full min-h-screen pt-0 pb-0">
+
+    <div className="max-w-3xl mx-auto my-8 p-6 bg-gradient-to-b from-blue-200 to-blue-200/30 dark:from-blue-900 dark:to-blue-900/30 rounded-lg shadow-lg">
+       <h2 className="text-2xl text-white font-bold mb-6 text-center">Manage Movies</h2>
 
       {movies.length === 0 ? (
         <p className="text-gray-500 text-center">No movies found.</p>
@@ -122,6 +124,7 @@ const AdminMovies = () => {
           ))}
         </ul>
       )}
+    </div>
     </div>
   );
 };

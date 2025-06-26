@@ -40,9 +40,10 @@ const Profile = () => {
 
 
   return (
-    <div className="min-h-screen bg-gray-100 flex justify-center items-center py-8">
-      <div className="border bg-white rounded-lg shadow-md p-8 w-full sm:w-[50vw]">
-        <div className="flex flex-col items-center mb-8">
+<div className="relative bg-gradient-to-b from-blue-200 to-blue-200/30 dark:from-blue-900 dark:to-blue-600/30 w-full min-h-screen pt-4 pb-3">
+
+    <div className="max-w-3xl mx-auto my-8 p-6 bg-gradient-to-b from-blue-200 to-blue-200/30 dark:from-blue-900 dark:to-blue-900/30 rounded-lg shadow-lg">
+      <div className="flex flex-col items-center mb-8">
           <img
             src="https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2247726673.jpg"
             alt="Profile"

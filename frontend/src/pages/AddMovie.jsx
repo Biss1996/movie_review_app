@@ -44,14 +44,14 @@ if (!currentUser || !currentUser.is_admin) {
   };
 
   return (
-    <div className="relative bg-gradient-to-b from-blue-200 to-blue-200/30 dark:from-blue-900 dark:to-blue-900/30 w-full min-h-screen pt-0 pb-0">
+    <div className="relative pt-4 pb-3 bg-gradient-to-b from-blue-200 to-blue-200/30 dark:from-blue-900 dark:to-blue-900/30 w-full min-h-screen pt-0 pb-0">
 
     <div className="max-w-3xl mx-auto my-8 p-6 bg-gradient-to-b from-blue-200 to-blue-200/30 dark:from-blue-900 dark:to-blue-900/30 rounded-lg shadow-lg">
-      <h2 className="text-2xl font-semibold text-gray-700 mb-4">Add a New Movie</h2>
+      <h2 className="text-2xl text-center font-semibold text-white mb-4">Add a New Movie</h2>
   
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label htmlFor="title" className="block text-gray-600 font-medium">Title</label>
+          <label htmlFor="title" className="block text-white font-medium">Title</label>
           <input required
             type="text"
             id="title"
@@ -63,7 +63,7 @@ if (!currentUser || !currentUser.is_admin) {
         </div>
 
         <div>
-          <label htmlFor="body" className="block text-gray-600 font-medium">Body</label>
+          <label htmlFor="body" className="block text-white font-medium">Body</label>
           <textarea required
             id="body"
             value={body}
@@ -75,7 +75,7 @@ if (!currentUser || !currentUser.is_admin) {
         </div>
 
         <div>
-          <label htmlFor="tags" className="block text-gray-600 font-medium">Tags</label>
+          <label htmlFor="tags" className="block text-white font-medium">Tags</label>
           <input required
             type="text"
             id="tags"

@@ -78,19 +78,21 @@ const SingleMovie = () => {
 
 
   return (
-    <div className="relative bg-gradient-to-b from-blue-200 to-blue-200/30 dark:from-blue-900 dark:to-blue-900/30 w-full min-h-screen pt-0 pb-0">
+      <div className="relative pt-4 pb-3 bg-gradient-to-b from-blue-200 to-blue-200/30 dark:from-blue-900 dark:to-blue-900/30 w-full min-h-screen pt-0 pb-0">
+
+    <div className="max-w-3xl mx-auto my-8 p-6 bg-gradient-to-b from-blue-200 to-blue-200/30 dark:from-blue-900 dark:to-blue-900/30 rounded-lg shadow-lg">
       <div>
-        <h2 className="text-3xl font-bold">{movie.title}</h2>
-        <p>{movie.description}</p>
+        <h2 className="text-3xl text-center text-white font-bold">{movie.title}</h2>
+          <p className="text-white">{movie.description}</p>
 
         <div className="mt-4 sm:w-[40vw]">
-          <h3 className="text-2xl font-semibold">Reviews</h3>
+          <h3 className="text-2xl text-white font-semibold">Reviews</h3>
           {movie && movie.reviews && movie.reviews.length > 0 ? (
             <ul>
               {movie.reviews
                 .filter(review => currentUser?.is_admin || review.is_approved)
                 .map((review) => (
-                  <li key={review.id} className="bg-gray-100 p-4 my-2 rounded">
+                  <li key={review.id} className="bg-gray-100 text-blue-700 p-4 my-2 rounded">
                     {/*  user can edit own review */}
                     {review.user.username === currentUser?.username ? (
                       editingReviewId === review.id ? (
@@ -143,10 +145,13 @@ const SingleMovie = () => {
                     )
                   ) : (
                     <>
-                      <p className="py-4">{review.message}</p>
+                      
                       <div className="flex justify-between">
                         <p>{review.user.username}</p>
-                        <p>{review.created_at}</p>
+                        
+                        <p className="mt-6 mb-3">{review.message}</p>
+                        <p className="text-xs text-gray-500">{review.created_at}</p>
+
                       </div>
                        {/* Show Approve Button only for admins */}
                         {!review.is_approved && currentUser?.is_admin && (
@@ -170,7 +175,7 @@ const SingleMovie = () => {
 
           <form onSubmit={handleSubmit} className="space-y-6 mt-4">
             <div>
-              <label htmlFor="rating" className="block font-medium text-gray-600">
+              <label htmlFor="rating" className="block font-medium text-white">
                 Your Rating (1 to 5)
               </label>
               <input
@@ -185,7 +190,7 @@ const SingleMovie = () => {
             </div>
 
             <div>
-              <label htmlFor="review" className="block text-gray-600 font-medium">
+              <label htmlFor="review" className="block text-white font-medium">
                 Write your review here
               </label>
               <textarea
@@ -194,7 +199,7 @@ const SingleMovie = () => {
                 value={body}
                 onChange={(e) => setBody(e.target.value)}
                 className="mt-2 p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter the details of your movie"
+                placeholder="Enter your review"
                 rows="5"
               />
             </div>
@@ -210,6 +215,7 @@ const SingleMovie = () => {
           </form>
         </div>
       </div>
+    </div>
     </div>
   );
 };
