@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MovieContext } from '../context/MovieContext';
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
+// import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
 import { UserContext } from '../context/UserContext';
 
 
