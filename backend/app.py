@@ -20,6 +20,9 @@ migrate = Migrate(app, db)
 db.init_app(app)
 # flask cors
 CORS(app)
+from flask_cors import CORS
+
+CORS(app, resources={r"/api/*": {"origins": "https://moviereview-taupe.vercel.app"}})
 
 # mail configurations
 
