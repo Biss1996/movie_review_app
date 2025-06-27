@@ -78,8 +78,8 @@ const Profile = () => {
             alt="Profile"
             className="rounded-full w-32 h-32 mb-4"
           />
-          <h2 className="text-2xl font-semibold text-gray-800">{currentUser && currentUser.username}</h2>
-          <p className="text-sm text-gray-600">{currentUser && currentUser.email}</p>
+          <h2 className="text-2xl font-semibold text-white">{currentUser && currentUser.username}</h2>
+          <p className="text-sm text-white">{currentUser && currentUser.email}</p>
         </div>
 
         {/* Buttons for Admin/User and Block User */}
@@ -102,7 +102,7 @@ const Profile = () => {
         {/* profile update form */}
         <form onSubmit={handleProfileUpdate} className="space-y-6">
           <div>
-            <label htmlFor="username" className="block text-sm font-medium text-gray-600">Username</label>
+            <label htmlFor="username" className="block text-sm font-medium text-white">Username</label>
             <input
               id="username"
               type="text"
@@ -113,18 +113,18 @@ const Profile = () => {
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-600">Email</label>
+            <label htmlFor="email" className="block text-sm font-medium text-white">Email</label>
             <input
               id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full mt-2 p-3 border border-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-600">Current Password</label>
+            <label htmlFor="password" className="block text-sm font-medium text-white">Current Password</label>
             <input
               id="password"
               type="password"
@@ -135,7 +135,7 @@ const Profile = () => {
           </div>
 
           <div>
-            <label htmlFor="newPassword" className="block text-sm font-medium text-gray-600">New Password</label>
+            <label htmlFor="newPassword" className="block text-sm font-medium text-white">New Password</label>
             <input
               id="newPassword"
               type="password"
@@ -146,7 +146,7 @@ const Profile = () => {
           </div>
 
           <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-600">Confirm New Password</label>
+            <label htmlFor="confirmPassword" className="block text-sm font-medium text-white">Confirm New Password</label>
             <input
               id="confirmPassword"
               type="password"
@@ -165,7 +165,7 @@ const Profile = () => {
         </form>
 
 
-        <h3 className='text-lg font-semibold text-gray-800 mt-8 mb-4'>DANGER ZONE! Delete Profile</h3>
+        <h3 className='text-lg font-semibold text-center text-gray-800 mt-8 mb-4'>DANGER ZONE! Delete Profile</h3>
         <button onClick={delete_profile}
             type="submit"
             className="w-full bg-red-500 text-white py-3 rounded-lg hover:bg-red-700 transition duration-300"

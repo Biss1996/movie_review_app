@@ -8,19 +8,21 @@ from sqlalchemy import event
 from sqlalchemy.engine import Engine
 from flask_cors import CORS
 import sqlite3 
+import os
 
 
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
+
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 migrate = Migrate(app, db)
 db.init_app(app)
 # flask cors
 CORS(app)
-from flask_cors import CORS
 
 CORS(app, resources={r"/api/*": {"origins": "https://moviereview-taupe.vercel.app"}})
 
