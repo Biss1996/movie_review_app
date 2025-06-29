@@ -22,9 +22,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 migrate = Migrate(app, db)
 db.init_app(app)
 # flask cors
-CORS(app)
-
-CORS(app, resources={r"/api/*": {"origins": "https://moviereview-taupe.vercel.app"}})
+CORS(app, origins=["https://moviereview-taupe.vercel.app"])
 
 # mail configurations
 
@@ -79,3 +77,6 @@ def check_if_token_revoked(jwt_header, jwt_payload: dict) -> bool:
 
     return token is not None
 
+@app.route("/")
+def home():
+    return "Backend is running!"
