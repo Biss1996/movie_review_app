@@ -33,7 +33,8 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 migrate = Migrate(app, db)
 db.init_app(app)
 # flask cors
-CORS(app, origins=["https://moviereview-taupe.vercel.app"])
+# CORS(app, origins=["https://moviereview-taupe.vercel.app"])
+CORS(app, origins=["https://moviereview-taupe.vercel.app"], supports_credentials=True)
 
 # mail configurations
 
