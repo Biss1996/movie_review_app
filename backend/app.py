@@ -7,25 +7,28 @@ from flask_jwt_extended import JWTManager
 from sqlalchemy import event
 from sqlalchemy.engine import Engine
 from flask_cors import CORS
+from dotenv import load_dotenv
 import sqlite3 
 import os
 
 
 
+load_dotenv()
 app = Flask(__name__)
 
-# ✅ Render PostgreSQL + SQLAlchemy SSL fix
+# Render PostgreSQL + SQLAlchemy SSL
 uri = os.getenv("DATABASE_URL")
 
 # Convert to correct scheme if needed and enforce SSL
 if uri and uri.startswith("postgres://"):
     uri = uri.replace("postgres://", "postgresql://", 1)
 
+if not uri:
+    raise ValueError("DATABASE_URL is not set in .env file or environment")
+
+# Use the updated URI with SSL requirement
 app.config["SQLALCHEMY_DATABASE_URI"] = uri + "?sslmode=require"
-
-
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 migrate = Migrate(app, db)
 db.init_app(app)
@@ -41,7 +44,6 @@ app.config["MAIL_USE_SSL"] = False
 app.config['MAIL_USERNAME'] = 'bismarckkip684@gmail.com' # Replace with your actual email
 app.config['MAIL_PASSWORD'] = 'iqrh njlh lltk bspa'  # Replace with your App actual password
 app.config['MAIL_DEFAULT_SENDER'] = 'bismarckkip684@gmail.com'
-
 mail = Mail(app)
 
 # delete reviews, ratins,movies when user is deleted
